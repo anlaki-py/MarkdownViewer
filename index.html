@@ -1,0 +1,510 @@
+<html><head><base href="https://markdownviewer.app" /><title>MarkdownViewer</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /><script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"><style>
+:root {
+--primary-color: #BB86FC;
+--secondary-color: #03DAC6;
+--background-color: #000000;
+--surface-color: #121212;
+--on-surface-color: #E1E1E1;
+--on-background-color: #FFFFFF;
+--error-color: #CF6679;
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+-webkit-tap-highlight-color: transparent;
+}
+
+body {
+font-family: 'Roboto', sans-serif;
+background-color: var(--background-color);
+color: var(--on-background-color);
+line-height: 1.6;
+padding: 16px;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+max-width: 800px;
+margin: 0 auto;
+}
+
+.app-bar {
+background-color: var(--surface-color);
+color: var(--on-surface-color);
+border-radius: 8px;
+margin-bottom: 16px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+overflow: hidden;
+transition: max-height 0.3s ease-out;
+}
+
+.app-bar-content {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 10px;
+padding: 16px;
+}
+
+.app-bar-toggle {
+background-color: var(--surface-color);
+color: var(--on-surface-color);
+border: none;
+padding: 8px 16px;
+width: 100%;
+text-align: left;
+cursor: pointer;
+font-size: 14px;
+font-weight: bold;
+display: flex;
+justify-content: space-between;
+align-items: center;
+outline: none;
+}
+
+.app-bar-toggle:hover {
+background-color: rgba(255, 255, 255, 0.1);
+}
+
+.app-bar-toggle::after {
+content: '▼';
+font-size: 12px;
+transition: transform 0.3s ease-out;
+}
+
+.app-bar.minimized .app-bar-toggle::after {
+transform: rotate(-90deg);
+}
+
+.counter {
+font-size: 14px;
+display: flex;
+flex-direction: column;
+}
+
+.counter-label {
+font-weight: bold;
+margin-bottom: 4px;
+color: var(--secondary-color);
+}
+
+.editor-container {
+position: relative;
+margin-bottom: 16px;
+}
+
+.editor-toolbar {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+background-color: var(--surface-color);
+padding: 8px;
+border-top-left-radius: 8px;
+border-top-right-radius: 8px;
+}
+
+.editor-toolbar button {
+background-color: transparent;
+border: none;
+color: var(--on-surface-color);
+cursor: pointer;
+font-size: 16px;
+padding: 4px 8px;
+border-radius: 4px;
+transition: background-color 0.2s;
+outline: none;
+}
+
+.editor-toolbar button:hover {
+background-color: rgba(255, 255, 255, 0.1);
+}
+
+.editor {
+background-color: var(--surface-color);
+border: none;
+border-bottom-left-radius: 8px;
+border-bottom-right-radius: 8px;
+padding: 16px;
+width: 100%;
+height: 200px;
+color: var(--on-surface-color);
+font-family: 'Roboto Mono', monospace;
+font-size: 14px;
+resize: vertical;
+outline: none;
+}
+
+.preview {
+background-color: var(--surface-color);
+border-radius: 8px;
+padding: 16px;
+overflow-wrap: break-word;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.preview h1, .preview h2, .preview h3, .preview h4, .preview h5, .preview h6 {
+color: var(--secondary-color);
+margin-top: 24px;
+margin-bottom: 16px;
+}
+
+.preview p {
+margin-bottom: 16px;
+}
+
+.preview a {
+color: var(--primary-color);
+text-decoration: none;
+}
+
+.preview a:hover {
+text-decoration: underline;
+}
+
+.preview code {
+background-color: rgba(255, 255, 255, 0.1);
+padding: 2px 4px;
+border-radius: 4px;
+font-family: 'Roboto Mono', monospace;
+}
+
+.preview pre {
+background-color: #1E1E1E;
+padding: 16px;
+border-radius: 8px;
+overflow-x: auto;
+margin-bottom: 16px;
+position: relative;
+}
+
+.preview pre code {
+background-color: transparent;
+padding: 0;
+}
+
+.preview blockquote {
+border-left: 4px solid var(--secondary-color);
+padding-left: 16px;
+margin-left: 0;
+margin-bottom: 16px;
+}
+
+.preview img {
+max-width: 100%;
+height: auto;
+border-radius: 8px;
+}
+
+.preview table {
+width: 100%;
+border-collapse: separate;
+border-spacing: 0;
+margin-bottom: 16px;
+}
+
+.preview th, .preview td {
+border: 1px solid rgba(255, 255, 255, 0.1);
+padding: 8px;
+text-align: left;
+}
+
+.preview th {
+background-color: rgba(255, 255, 255, 0.05);
+font-weight: bold;
+}
+
+.preview tr:nth-child(even) {
+background-color: rgba(255, 255, 255, 0.02);
+}
+
+.preview ul, .preview ol {
+margin-bottom: 16px;
+padding-left: 24px;
+}
+
+.preview li {
+margin-bottom: 8px;
+}
+
+.preview ol {
+list-style-type: decimal;
+}
+
+.preview ol ol {
+list-style-type: lower-alpha;
+}
+
+.preview ol ol ol {
+list-style-type: lower-roman;
+}
+
+.copy-button {
+position: absolute;
+top: 8px;
+right: 8px;
+background-color: var(--primary-color);
+color: var(--background-color);
+border: none;
+border-radius: 4px;
+padding: 4px 8px;
+font-size: 12px;
+cursor: pointer;
+opacity: 0.7;
+transition: opacity 0.3s ease-in-out;
+outline: none;
+}
+
+.copy-button:hover {
+opacity: 1;
+}
+
+.button-group {
+display: flex;
+gap: 10px;
+margin-bottom: 16px;
+}
+
+.action-button {
+/* Variables */
+--button_radius: 0.75em;
+--button_color: #e8e8e8;
+--button_outline_color: #000000;
+font-size: 17px;
+font-weight: bold;
+border: none;
+border-radius: var(--button_radius);
+background: var(--button_outline_color);
+cursor: pointer;
+position: relative;
+padding: 0;
+outline: none;
+}
+
+.action-button .button_top {
+display: block;
+box-sizing: border-box;
+border: 2px solid var(--button_outline_color);
+border-radius: var(--button_radius);
+padding: 0.75em 1.5em;
+background: var(--button_color);
+color: var(--button_outline_color);
+transform: translateY(-0.2em);
+transition: transform 0.1s ease;
+}
+
+.action-button:hover .button_top {
+transform: translateY(-0.33em);
+}
+
+.action-button:active .button_top {
+transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+.app-bar-content {
+grid-template-columns: 1fr;
+}
+
+.button-group {
+flex-direction: column;
+}
+
+.editor-toolbar {
+flex-wrap: wrap;
+}
+}
+
+/* Hardware acceleration */
+.container, .app-bar, .editor, .preview, .copy-button, .action-button {
+transform: translateZ(0);
+backface-visibility: hidden;
+perspective: 1000px;
+}
+</style></head><body><div class="container"><div id="app-bar" class="app-bar minimized"><button id="app-bar-toggle" class="app-bar-toggle">Document Information</button><div class="app-bar-content"><div class="counter"><span class="counter-label">Text Statistics</span><span id="word-count">0 words</span><span id="char-count">0 characters</span><span id="line-count">0 lines</span></div><div class="counter"><span class="counter-label">Reading Time</span><span id="read-time">0 min read</span><span id="speak-time">0 min speech</span></div><div class="counter"><span class="counter-label">Complexity</span><span id="sentence-count">0 sentences</span><span id="avg-word-length">0 avg word length</span><span id="readability">Easy to read</span></div></div></div><div class="editor-container"><div class="editor-toolbar"><button id="bold-btn" title="Bold"><i class="fas fa-bold"></i></button><button id="italic-btn" title="Italic"><i class="fas fa-italic"></i></button><button id="strikethrough-btn" title="Strikethrough"><i class="fas fa-strikethrough"></i></button><button id="heading-btn" title="Heading"><i class="fas fa-heading"></i></button><button id="link-btn" title="Link"><i class="fas fa-link"></i></button><button id="image-btn" title="Image"><i class="fas fa-image"></i></button><button id="list-ul-btn" title="Unordered List"><i class="fas fa-list-ul"></i></button><button id="list-ol-btn" title="Ordered List"><i class="fas fa-list-ol"></i></button><button id="quote-btn" title="Blockquote"><i class="fas fa-quote-right"></i></button><button id="code-btn" title="Code"><i class="fas fa-code"></i></button><button id="table-btn" title="Table"><i class="fas fa-table"></i></button><button id="horizontal-rule-btn" title="Horizontal Rule"><i class="fas fa-minus"></i></button><button id="checkbox-btn" title="Checkbox"><i class="fas fa-check-square"></i></button><button id="undo-btn" title="Undo"><i class="fas fa-undo"></i></button><button id="redo-btn" title="Redo"><i class="fas fa-redo"></i></button></div><textarea id="editor" class="editor" placeholder="Enter your Markdown here..."></textarea></div><div class="button-group"><button id="clear-button" class="action-button"><span class="button_top">Clear</span></button><button id="copy-markdown-button" class="action-button"><span class="button_top">Copy Markdown</span></button><button id="toggle-preview-button" class="action-button"><span class="button_top">Toggle Preview</span></button></div><div id="preview" class="preview"></div></div><script>
+const editor = document.getElementById('editor');
+const preview = document.getElementById('preview');
+const wordCount = document.getElementById('word-count');
+const charCount = document.getElementById('char-count');
+const lineCount = document.getElementById('line-count');
+const readTime = document.getElementById('read-time');
+const speakTime = document.getElementById('speak-time');
+const sentenceCount = document.getElementById('sentence-count');
+const avgWordLength = document.getElementById('avg-word-length');
+const readability = document.getElementById('readability');
+const appBar = document.getElementById('app-bar');
+const appBarToggle = document.getElementById('app-bar-toggle');
+const clearButton = document.getElementById('clear-button');
+const copyMarkdownButton = document.getElementById('copy-markdown-button');
+const togglePreviewButton = document.getElementById('toggle-preview-button');
+
+let undoStack = [];
+let redoStack = [];
+
+function updatePreview() {
+const markdown = editor.value;
+preview.innerHTML = marked.parse(markdown);
+hljs.highlightAll();
+updateCounters();
+addCopyButtons();
+}
+
+function updateCounters() {
+const text = editor.value;
+const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+const chars = text.length;
+const lines = text ? text.split('\n').length : 0;
+const sentences = text.split(/[.!?]+/).length - 1;
+const readTimeMinutes = Math.ceil(words / 200);
+const speakTimeMinutes = Math.ceil(words / 130);
+const avgWordLen = words > 0 ? (chars / words).toFixed(1) : 0;
+
+wordCount.textContent = `${words} word${words !== 1 ? 's' : ''}`;
+charCount.textContent = `${chars} character${chars !== 1 ? 's' : ''}`;
+lineCount.textContent = `${lines} line${lines !== 1 ? 's' : ''}`;
+readTime.textContent = `${readTimeMinutes} min read`;
+speakTime.textContent = `${speakTimeMinutes} min speech`;
+sentenceCount.textContent = `${sentences} sentence${sentences !== 1 ? 's' : ''}`;
+avgWordLength.textContent = `${avgWordLen} avg word length`;
+
+if (avgWordLen < 4.5) {
+readability.textContent = 'Easy to read';
+} else if (avgWordLen < 5.5) {
+readability.textContent = 'Moderate to read';
+} else {
+readability.textContent = 'Difficult to read';
+}
+}
+
+function addCopyButtons() {
+const codeBlocks = preview.querySelectorAll('pre');
+codeBlocks.forEach((block, index) => {
+if (!block.querySelector('.copy-button')) {
+const button = document.createElement('button');
+button.textContent = 'Copy';
+button.className = 'copy-button';
+button.addEventListener('click', () => copyCodeBlock(block, button));
+block.style.position = 'relative';
+block.appendChild(button);
+}
+});
+}
+
+function copyCodeBlock(block, button) {
+const code = block.querySelector('code').textContent;
+navigator.clipboard.writeText(code).then(() => {
+button.textContent = 'Copied!';
+setTimeout(() => {
+button.textContent = 'Copy';
+}, 2000);
+});
+}
+
+function toggleAppBar() {
+appBar.classList.toggle('minimized');
+if (appBar.classList.contains('minimized')) {
+appBar.style.maxHeight = appBarToggle.offsetHeight + 'px';
+} else {
+appBar.style.maxHeight = appBar.scrollHeight + 'px';
+}
+}
+
+function clearEditor() {
+editor.value = '';
+updatePreview();
+}
+
+function copyMarkdown() {
+navigator.clipboard.writeText(editor.value).then(() => {
+const buttonTop = copyMarkdownButton.querySelector('.button_top');
+buttonTop.textContent = 'Copied!';
+setTimeout(() => {
+buttonTop.textContent = 'Copy Markdown';
+}, 2000);
+});
+}
+
+function togglePreview() {
+preview.style.display = preview.style.display === 'none' ? 'block' : 'none';
+const buttonTop = togglePreviewButton.querySelector('.button_top');
+buttonTop.textContent = preview.style.display === 'none' ? 'Show Preview' : 'Hide Preview';
+}
+
+function insertMarkdown(before, after = '') {
+const start = editor.selectionStart;
+const end = editor.selectionEnd;
+const selection = editor.value.substring(start, end);
+const replacement = before + selection + after;
+saveUndoState();
+editor.value = editor.value.substring(0, start) + replacement + editor.value.substring(end);
+editor.setSelectionRange(start + before.length, end + before.length);
+editor.focus();
+updatePreview();
+}
+
+function saveUndoState() {
+undoStack.push(editor.value);
+redoStack = [];
+}
+
+function undo() {
+if (undoStack.length > 0) {
+redoStack.push(editor.value);
+editor.value = undoStack.pop();
+updatePreview();
+}
+}
+
+function redo() {
+if (redoStack.length > 0) {
+undoStack.push(editor.value);
+editor.value = redoStack.pop();
+updatePreview();
+}
+}
+
+document.getElementById('bold-btn').addEventListener('click', () => insertMarkdown('**', '**'));
+document.getElementById('italic-btn').addEventListener('click', () => insertMarkdown('*', '*'));
+document.getElementById('strikethrough-btn').addEventListener('click', () => insertMarkdown('~~', '~~'));
+document.getElementById('heading-btn').addEventListener('click', () => insertMarkdown('### '));
+document.getElementById('link-btn').addEventListener('click', () => insertMarkdown('[', '](url)'));
+document.getElementById('image-btn').addEventListener('click', () => insertMarkdown('![alt text](', ' "title")'));
+document.getElementById('list-ul-btn').addEventListener('click', () => insertMarkdown('- '));
+document.getElementById('list-ol-btn').addEventListener('click', () => insertMarkdown('1. '));
+document.getElementById('quote-btn').addEventListener('click', () => insertMarkdown('> '));
+document.getElementById('code-btn').addEventListener('click', () => insertMarkdown('```\n', '\n```'));
+document.getElementById('table-btn').addEventListener('click', () => {
+insertMarkdown('| Header | Header |\n| ------ | ------ |\n| Cell   | Cell   |\n| Cell   | Cell   |');
+});
+document.getElementById('horizontal-rule-btn').addEventListener('click', () => insertMarkdown('\n---\n'));
+document.getElementById('checkbox-btn').addEventListener('click', () => insertMarkdown('- [ ] '));
+document.getElementById('undo-btn').addEventListener('click', undo);
+document.getElementById('redo-btn').addEventListener('click', redo);
+
+editor.addEventListener('input', () => {
+saveUndoState();
+updatePreview();
+});
+appBarToggle.addEventListener('click', toggleAppBar);
+clearButton.addEventListener('click', clearEditor);
+copyMarkdownButton.addEventListener('click', copyMarkdown);
+togglePreviewButton.addEventListener('click', togglePreview);
+
+marked.use({
+gfm: true,
+breaks: true,
+highlight: function(code, lang) {
+const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+return hljs.highlight(code, { language }).value;
+},
+});
+
+// Set initial content
+editor.value = '# Markdown Example\n\n## Text Formatting\n\nThis is **bold** text.\n\nThis is _italic_ text.\n\nThis is a ~~strikethrough~~ text.\n\n## Lists\n\n### Unordered List\n- Item 1\n- Item 2\n- Item 3\n\n### Ordered List\n1. First item\n2. Second item\n3. Third item\n\n## Links\n\n[Click here to visit my website](https://rule34.paheal.net)\n\n### Image\n\n![Image Alt Text](https://wallpaperaccess.com/full/126872.jpg)\n\n## Blockquotes\n\n> This is a blockquote. You can quote text here.\n\n## Code\n\nInline `code` can be displayed like this.\n\n```python\ndef hello_world():\n    print("Hello, World!")\n```\n\n## Tables\n\n| Name  | Age | Location |\n|-------|-----|----------|\n| Alice | 25  | New York |\n| Bob   | 30  | London   |\n| Charlie | 28 | Paris   |\n\n## Video Embed\n\n[![Video thumbnail](https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg)](https://youtu.be/dQw4w9WgXcQ?si=_h8IzcS42aT_gOAT)';
+updatePreview();
+appBar.style.maxHeight = appBarToggle.offsetHeight + 'px';
+</script>
+<footer>&copy; 2024 anlaki, All rights reserved.</footer>
+</body>
+</html>
